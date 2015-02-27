@@ -1,5 +1,7 @@
 var countries = require('../models/countries.json');
+var mongoose = require('mongoose');
 var _ = require('underscore');
+var Country = require('../models/country.js');
 
 var indexController = {
 	index: function(req, res) {
@@ -7,29 +9,30 @@ var indexController = {
 	},
 
   getCountries: function(req, res){
-    res.send(countries);
+    Country.find({}, function(err, results){
+      res.send(results);      
+    });
   },
 
   getSearch: function(req, res){
     var searchValue = req.body.searchValue;
-    var results = _.filter(countries, function(country){
-      return country.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ;
+    
+    Country.find({}, function(err, results){
+      var searchResults = _.filter(results, function(country){
+        return country.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ;
+      });
+      res.send(searchResults);
     });
-    res.send(results);
+
   },
 
   markVisited: function(req, res){
-
     var countryName = req.body.country;
 
-    countries = _.map(countries, function(country){
-      if(country.name === countryName){
-        country.hasTravelled = true;       
-      }
-      return country;
+    Country.findOneAndUpdate({name: countryName}, {hasTravelled : true}, function(err, result){
+      res.send('success');
     });
-
-    res.send('success');
+    
   }
 };
 

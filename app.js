@@ -1,7 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var indexController = require('./controllers/index.js');
-// var countries = require('./models/countries.json');
+
+// Mongoose
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/countries');
+
+// Seed the database
+require('./models/countriesSeed.js');
 
 var app = express();
 app.set('view engine', 'jade');
