@@ -16,6 +16,20 @@ var indexController = {
       return country.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ;
     });
     res.send(results);
+  },
+
+  markVisited: function(req, res){
+
+    var countryName = req.body.country;
+
+    countries = _.map(countries, function(country){
+      if(country.name === countryName){
+        country.hasTravelled = true;       
+      }
+      return country;
+    });
+
+    res.send('success');
   }
 };
 
